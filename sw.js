@@ -1,5 +1,5 @@
-const CACHE='dokugeki-1b6ff3a621';
-const ASSETS=["./", "index.html", "about.html", "privacy.html", "config.js", "app.css?v=1b6ff3a621", "app.js?v=1b6ff3a621", "data/data.js?v=1b6ff3a621", "manifest.webmanifest", "icon.svg", "icon-192.png", "icon-512.png"];
+const CACHE='dokugeki-30bec21ef7';
+const ASSETS=["./", "index.html", "about.html", "privacy.html", "config.js", "app.css?v=30bec21ef7", "app.js?v=30bec21ef7", "data/data.js?v=30bec21ef7", "manifest.webmanifest", "icon.svg", "icon-192.png", "icon-512.png"];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE&&k!=='dokugeki-fonts'&&k.startsWith('dokugeki-')).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET')return;

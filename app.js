@@ -585,7 +585,7 @@
   }).catch(() => { $("#main").innerHTML = '<div class="empty">データを読み込めませんでした。ページを再読み込みしてください。</div>'; });
 
   const C = window.DOKUGEKI_CONFIG || {};
-  if (C.adsenseClient && location.protocol.startsWith("http")) {
+  if (C.adsenseClient && location.protocol.startsWith("http") && !document.querySelector('script[src*="adsbygoogle.js"]')) {
     const s = document.createElement("script"); s.async = true; s.crossOrigin = "anonymous";
     s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + encodeURIComponent(C.adsenseClient);
     document.head.appendChild(s);
