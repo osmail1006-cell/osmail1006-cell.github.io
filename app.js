@@ -1,3 +1,119 @@
+/* 図解・イラスト(SVG/HTML)。内容は data/ の検証済みの事実と法令の条文に合わせている。 */
+window.DOKUGEKI_FIGS = (function () {
+  "use strict";
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const fig = (title, body, cap) => '<figure class="fig"><figcaption class="fig-title">' + esc(title) + "</figcaption>" + body + (cap ? '<p class="fig-cap">' + cap + "</p>" : "") + "</figure>";
+  const chip = (color, label, sub, dark) => '<span class="cchip"><span class="cdot' + (dark ? " cdot-dark" : "") + '" style="background:' + color + '" aria-hidden="true"></span><span><b>' + esc(label) + "</b>" + (sub ? "<small>" + esc(sub) + "</small>" : "") + "</span></span>";
+
+  const F = {};
+
+  F.cat = () => fig("毒物・劇物・特定毒物の関係",
+    '<div class="venn"><div class="venn-doku"><span class="venn-h">毒物(法 別表第一+指定令1条)</span><span class="venn-ex">例: 水銀、砒素、セレン、ニコチン、シアン化ナトリウム、シアン化水素、弗化水素、黄リン</span>' +
+    '<div class="venn-tok"><span class="venn-h">特定毒物(別表第三+指定令3条)</span><span class="venn-ex">四アルキル鉛、モノフルオール酢酸(塩・アミド)、TEPP、パラチオン など</span></div></div>' +
+    '<div class="venn-geki"><span class="venn-h">劇物(法 別表第二+指定令2条)</span><span class="venn-ex">例: 硫酸、水酸化ナトリウム、アンモニア、クロロホルム、ナトリウム、カリウム、塩化第一水銀</span></div></div>',
+    "特定毒物は毒物の一部です。劇物の中に特定毒物はありません。医薬品・医薬部外品は、毒物・劇物から除かれます(法2条)。");
+
+  F.labels = () => fig("表示の見分け方(どこに・何色で)",
+    '<div class="labels">' +
+    '<div class="lab-item"><svg viewBox="0 0 120 150" class="lab-svg" role="img" aria-label="毒物の容器の表示。赤地に白い文字で毒物"><path d="M38 8h44v18l14 18v96a6 6 0 0 1-6 6H30a6 6 0 0 1-6-6V44l14-18z" class="ill-glass"/><rect x="30" y="62" width="60" height="54" rx="2" class="ill-red"/><text x="60" y="80" class="ill-t-small ill-white" text-anchor="middle">医薬用外</text><text x="60" y="104" class="ill-t-big ill-white" text-anchor="middle">毒物</text></svg><p><b>毒物の容器・被包</b><br>赤地に白い文字</p></div>' +
+    '<div class="lab-item"><svg viewBox="0 0 120 150" class="lab-svg" role="img" aria-label="劇物の容器の表示。白地に赤い文字で劇物"><path d="M38 8h44v18l14 18v96a6 6 0 0 1-6 6H30a6 6 0 0 1-6-6V44l14-18z" class="ill-glass"/><rect x="30" y="62" width="60" height="54" rx="2" class="ill-whitebox"/><text x="60" y="80" class="ill-t-small ill-redtxt" text-anchor="middle">医薬用外</text><text x="60" y="104" class="ill-t-big ill-redtxt" text-anchor="middle">劇物</text></svg><p><b>劇物の容器・被包</b><br>白地に赤い文字</p></div>' +
+    '<div class="lab-item"><svg viewBox="0 0 120 150" class="lab-svg" role="img" aria-label="貯蔵・陳列場所の表示。医薬用外と劇物の文字。色の指定はない"><rect x="14" y="20" width="92" height="120" rx="3" class="ill-door"/><rect x="26" y="40" width="68" height="44" rx="2" class="ill-plate"/><text x="60" y="58" class="ill-t-small ill-ink" text-anchor="middle">医薬用外</text><text x="60" y="78" class="ill-t-mid ill-ink" text-anchor="middle">劇物</text><circle cx="94" cy="104" r="4" class="ill-ink-f"/></svg><p><b>貯蔵・陳列の場所</b><br>「医薬用外」+「毒物」「劇物」。色の指定なし</p></div>' +
+    '<div class="lab-item"><svg viewBox="0 0 120 150" class="lab-svg" role="img" aria-label="運搬車両の標識。黒地に白い文字で毒。0.3メートル平方"><rect x="22" y="34" width="76" height="76" class="ill-black"/><text x="60" y="88" class="ill-t-huge ill-white" text-anchor="middle">毒</text><line x1="22" y1="122" x2="98" y2="122" class="ill-dim"/><text x="60" y="138" class="ill-t-small ill-ink" text-anchor="middle">0.3m平方</text></svg><p><b>運搬車両の標識</b><br>黒地に白い「毒」。車両の前後</p></div>' +
+    "</div>", "容器は法12条1項、販売時の表示事項は12条2項、貯蔵・陳列の場所は12条3項、車両の標識は規則13条の5。");
+
+  F.timeline = () => {
+    const rows = [["直ちに", "流出・漏えいで危害のおそれ → 保健所・警察署・消防機関。盗難・紛失 → 警察署", "法17条"],
+      ["15日以内", "登録が失効したとき、持っている特定毒物の品名・数量を届け出る", "法21条1項"],
+      ["30日以内", "取扱責任者を置いた・変えた、氏名・住所・設備の重要な部分・店舗の名称を変えた、営業を廃止した、業務上取扱者になった", "法7条3項・10条・22条"],
+      ["50日以内", "失効後に、持っている特定毒物を営業者などに譲り渡せる期間", "法21条2項"],
+      ["5年", "譲渡手続の書面・交付の確認の帳簿の保存。製造業・輸入業の登録の更新", "法14条4項・15条4項・4条3項"],
+      ["6年", "販売業の登録の更新", "法4条3項"]];
+    return fig("期限と期間の時間軸", '<ol class="tline">' + rows.map((r) => '<li><span class="tl-when">' + esc(r[0]) + '</span><span class="tl-what">' + esc(r[1]) + '<small>' + esc(r[2]) + "</small></span></li>").join("") + "</ol>",
+      "「あらかじめ」が必要なのは、品目を増やすときの登録の変更(法9条)。事後の届出と混同しないこと。");
+  };
+
+  F.transport = () => fig("5,000kg以上を車両で運ぶときの4点セット",
+    '<svg viewBox="0 0 320 120" class="truck" role="img" aria-label="トラックのイラスト。前後に黒地に白の毒の標識"><rect x="20" y="30" width="190" height="62" rx="4" class="ill-body"/><path d="M210 48h46l26 22v22h-72z" class="ill-body"/><rect x="232" y="54" width="22" height="16" rx="2" class="ill-glass"/><circle cx="64" cy="96" r="13" class="ill-ink-f"/><circle cx="246" cy="96" r="13" class="ill-ink-f"/><circle cx="64" cy="96" r="5" class="ill-wheel"/><circle cx="246" cy="96" r="5" class="ill-wheel"/>' +
+    '<rect x="24" y="36" width="26" height="26" class="ill-black"/><text x="37" y="55" class="ill-t-mid ill-white" text-anchor="middle">毒</text><rect x="284" y="66" width="22" height="22" class="ill-black"/><text x="295" y="82" class="ill-t-small2 ill-white" text-anchor="middle">毒</text><text x="120" y="68" class="ill-t-mid ill-ink" text-anchor="middle">5,000kg以上</text></svg>' +
+    '<div class="four"><div><b>① 交替運転者</b>連続4時間超(やむを得ない場合4時間30分)、2日平均で1日9時間超のとき</div><div><b>② 標識</b>0.3m平方、黒地に白字の「毒」を前後に</div><div><b>③ 保護具</b>2人分以上(物質ごとに規則別表第五)</div><div><b>④ 書面</b>名称、成分と含量、事故の際の応急措置</div></div>',
+    "根拠: 令40条の5第2項、規則13条の4〜13条の6。運搬を委託するときは、荷送人が運送人に書面(数量も書く)を渡す。1回1,000kg以下なら不要(令40条の6、規則13条の7)。");
+
+  F.disposal = () => {
+    const rows = [["酸・アルカリ", "中和法", "薄めて中和すれば、塩と水になる", "硫酸、硝酸、塩酸、水酸化ナトリウム、アンモニア水"],
+      ["燃える有機物", "燃焼法", "炭素・水素・酸素だけなら、燃やすと二酸化炭素と水", "トルエン、キシレン、メタノール、酢酸エチル"],
+      ["塩素を含む有機物", "燃焼法(スクラバー付き)", "燃やすと塩化水素が出るので、アルカリで洗って除く", "クロロホルム、四塩化炭素、トリクロル酢酸"],
+      ["六価クロム", "還元沈殿法", "還元して三価にし、水酸化物として沈める", "重クロム酸カリウム、無水クロム酸"],
+      ["酸化剤(塩素酸塩)", "還元法", "還元剤で酸化力をなくす", "塩素酸ナトリウム、塩素酸カリウム"],
+      ["シアン化合物", "酸化法", "アルカリ性(pH11以上)にしてから酸化分解。酸性だとシアン化水素が出る", "シアン化ナトリウム、シアン化カリウム"],
+      ["水に溶けない重金属", "固化隔離法", "セメントで固めて溶け出さないようにする", "砒素(単体)、セレン、一酸化鉛"],
+      ["水銀(単体)", "回収法", "燃やすと蒸気になるので、蒸留して回収する", "水銀"],
+      ["バリウム・弗素", "沈殿法", "水に溶けない塩(硫酸バリウム・弗化カルシウム)にする", "塩化バリウム、弗化水素"],
+      ["過酸化水素", "希釈法", "分解すると水と酸素だけになる", "過酸化水素"]];
+    return fig("廃棄法は「性質」で選ぶ", '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>性質</th><th>方法</th><th>なぜ</th><th>例</th></tr></thead><tbody>' +
+      rows.map((r) => "<tr><td>" + esc(r[0]) + "</td><td><b>" + esc(r[1]) + "</b></td><td>" + esc(r[2]) + "</td><td>" + esc(r[3]) + "</td></tr>").join("") + "</tbody></table></div>",
+      "物質ごとの正式な方法は、厚生労働省「毒物及び劇物の廃棄の方法に関する基準」によります(物質ページの「廃棄」欄)。");
+  };
+
+  F.flame = () => fig("炎色反応の色見本",
+    '<div class="cgrid">' + chip("#d32f2f", "Li リチウム", "赤") + chip("#f9c80e", "Na ナトリウム", "黄 ★過去問頻出") + chip("#8e44ad", "K カリウム", "青紫(コバルトガラスで紅紫) ★") +
+    chip("#1fa38a", "Cu 銅", "青緑") + chip("#ef6c00", "Ca カルシウム", "橙赤") + chip("#c2185b", "Sr ストロンチウム", "紅(深赤)") + chip("#9ccc3c", "Ba バリウム", "黄緑") + "</div>",
+    "語呂: 「リアカー無きK村、動力借りるとするもくれない、馬力」。★は毒劇の実地で出る物質(公式正答で確認)。ほかは基礎化学の知識です。");
+
+  F.precip = () => fig("沈殿・呈色の色見本(実地の鑑別法)",
+    '<div class="cgrid">' + chip("#ffffff", "硝酸銀 + 塩酸", "白色の沈殿(塩化銀)") + chip("#ffffff", "アンモニア水 + 濃塩酸", "白い霧(塩化アンモニウム)") +
+    chip("#ffffff", "水酸化カリウム + 酒石酸", "白色の結晶性沈殿") + chip("#111111", "一酸化鉛 → 希硝酸 + 硫化水素", "黒色の沈殿(硫化鉛)", true) +
+    chip("#c62828", "塩化第二水銀 + 消石灰", "赤色の沈殿") + chip("#283593", "臭素 → ヨウ化カリウムでんぷん紙", "藍色(青色)") +
+    chip("#6a1b9a", "フェノール + 塩化鉄(III)", "紫色") + chip("#6a1b9a", "アニリン + さらし粉", "紫色") +
+    chip("#1565c0", "硝酸 + 銅くず", "藍色に溶け、赤褐色の気体") + chip("#8d4a1d", "亜硝酸ナトリウム + 希硫酸", "褐色の蒸気") + "</div>",
+    "色が手がかりになる鑑別法です。実地は2択なので、色の決め手を1つ覚えておけば正答できます。");
+
+  F.colors = () => fig("物質そのものの色",
+    '<div class="cgrid">' + chip("#c6d93a", "塩素", "黄緑色の気体") + chip("#8b2e16", "臭素", "赤褐色の液体") + chip("#3b2f4a", "沃素", "黒灰色の結晶・紫の蒸気", true) +
+    chip("#e8602c", "重クロム酸塩", "橙赤色の結晶") + chip("#8e1b1b", "無水クロム酸", "暗赤色の結晶") + chip("#f3e27a", "ピクリン酸", "淡黄色の結晶") +
+    chip("#f4e9b8", "黄リン", "白〜淡黄色のロウ状") + chip("#d9822b", "一酸化鉛", "黄色〜赤色の粉末") + chip("#555b61", "燐化亜鉛", "暗灰色", true) +
+    chip("#a0522d", "アニリン", "無色 → 空気で赤褐色") + chip("#8a6d3b", "ニコチン", "無色 → 空気で褐色") + chip("#f2b8b8", "フェノール", "無色の結晶 → 空気で赤(紅)色") + "</div>",
+    "語呂: 「黄緑の塩素、赤茶の臭素、黒紫の沃素」。色見本は目安です。実際の色合いは、濃さや純度で変わります。");
+
+  F.storage = () => fig("貯蔵法のグループ",
+    '<div class="sgrid">' +
+    '<div class="sbox"><svg viewBox="0 0 60 60" aria-hidden="true"><rect x="12" y="14" width="36" height="38" rx="4" class="ill-oil"/><rect x="18" y="8" width="12" height="8" rx="1" class="ill-ink-f"/></svg><b>石油(灯油)の中</b><span>ナトリウム、カリウム<br>水・空気と激しく反応するから</span></div>' +
+    '<div class="sbox"><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M14 20h32v30a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4z" class="ill-water"/><path d="M14 20h32" class="ill-dim"/></svg><b>水の中</b><span>黄リン(空気で発火するから)<br>二硫化炭素(水を張って蒸発を防ぐ)</span></div>' +
+    '<div class="sbox"><svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="12" class="ill-sun"/><line x1="12" y1="48" x2="48" y2="12" class="ill-ban"/></svg><b>光を避ける</b><span>ベタナフトール(光で赤変)<br>過酸化水素(褐色びん、3分の1の空間)</span></div>' +
+    '<div class="sbox"><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M22 10h16v12l8 10v18a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V32l8-10z" class="ill-glass"/><circle cx="30" cy="40" r="5" class="ill-red"/></svg><b>何かを加える</b><span>クロロホルム(アルコール)<br>アクロレイン(安定剤)<br>ピクリン酸(水で湿らせる)</span></div>' +
+    '<div class="sbox"><svg viewBox="0 0 60 60" aria-hidden="true"><rect x="14" y="18" width="32" height="34" rx="4" class="ill-gas"/><text x="30" y="40" class="ill-t-small ill-ink" text-anchor="middle">N₂</text></svg><b>不活性ガスの中</b><span>アクリルニトリル(窒素など)</span></div>' +
+    '<div class="sbox"><svg viewBox="0 0 60 60" aria-hidden="true"><rect x="16" y="14" width="28" height="38" rx="3" class="ill-body"/><path d="M16 22h28" class="ill-dim"/></svg><b>ガラスはだめ</b><span>弗化水素酸(ガラスを侵すので、ポリエチレンなどの容器)</span></div>' +
+    "</div>", "語呂: 「リンは水の中、ナトカリは油の中」。");
+
+  F.exclusion = () => {
+    const pts = [[1, "ホルムアルデヒド、ベタナフトール"], [5, "水酸化ナトリウム、水酸化カリウム、フェノール、クレゾール、過酸化ナトリウム"], [6, "過酸化水素"], [10, "硫酸、硝酸、塩化水素、アンモニア、蓚酸"], [11, "ヘキサン酸"]];
+    return fig("除外濃度(この%以下なら劇物でない)", '<div class="xbars">' + pts.map((p) => '<div class="xrow"><span class="xval">' + p[0] + '%</span><span class="xbar"><span style="width:' + Math.round((p[0] / 11) * 100) + '%"></span></span><span class="xnames">' + esc(p[1]) + "</span></div>").join("") + "</div>",
+      "語呂: 「アル・ゴー、サン・トー」(アルカリ5%、酸10%)、「過酸化はロク(6)」、「ホルマリンはワン(1)」。根拠: 指定令2条1項。");
+  };
+
+  F.states = () => fig("状態変化の名前",
+    '<svg viewBox="0 0 320 200" class="states" role="img" aria-label="固体・液体・気体の間の状態変化の図"><circle cx="60" cy="160" r="30" class="ill-solid"/><text x="60" y="166" class="ill-t-mid ill-ink" text-anchor="middle">固体</text><circle cx="260" cy="160" r="30" class="ill-liquid"/><text x="260" y="166" class="ill-t-mid ill-ink" text-anchor="middle">液体</text><circle cx="160" cy="40" r="30" class="ill-gasc"/><text x="160" y="46" class="ill-t-mid ill-ink" text-anchor="middle">気体</text>' +
+    '<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ill-ink-f"/></marker></defs>' +
+    '<line x1="94" y1="152" x2="226" y2="152" class="ill-arrow" marker-end="url(#ah)"/><text x="160" y="146" class="ill-t-small ill-ink" text-anchor="middle">融解</text>' +
+    '<line x1="226" y1="170" x2="94" y2="170" class="ill-arrow" marker-end="url(#ah)"/><text x="160" y="186" class="ill-t-small ill-ink" text-anchor="middle">凝固</text>' +
+    '<line x1="244" y1="130" x2="186" y2="62" class="ill-arrow" marker-end="url(#ah)"/><text x="236" y="92" class="ill-t-small ill-ink">蒸発</text>' +
+    '<line x1="174" y1="70" x2="232" y2="138" class="ill-arrow" marker-end="url(#ah)"/><text x="176" y="112" class="ill-t-small ill-ink">凝縮</text>' +
+    '<line x1="76" y1="130" x2="134" y2="62" class="ill-arrow" marker-end="url(#ah)"/><text x="62" y="92" class="ill-t-small ill-ink">昇華</text>' +
+    '<line x1="146" y1="70" x2="88" y2="138" class="ill-arrow" marker-end="url(#ah)"/><text x="118" y="116" class="ill-t-small ill-ink">昇華</text></svg>',
+    "固体と気体の間の変化は、どちら向きも「昇華」(気体→固体は「凝華」とも言います)。埼玉R7問12では「気体から液体=凝縮」が正答でした。");
+
+  F.calc = () => fig("計算は2つの式でほぼ解ける",
+    '<div class="calc-grid"><div class="formula"><p class="f-name">モル濃度</p><p class="f-eq"><span>mol/L</span> = <span class="frac"><span>溶質の mol</span><span>溶液の L</span></span></p>' +
+    '<p class="f-ex">例(埼玉R7問15): グルコース90g(分子量180)を500mLに<br>① 90 ÷ 180 = 0.50 mol<br>② 500mL = 0.500 L<br>③ 0.50 ÷ 0.500 = <b>1.0 mol/L</b></p></div>' +
+    '<div class="formula"><p class="f-name">中和</p><p class="f-eq">価数 × 濃度 × 体積(酸) = 価数 × 濃度 × 体積(塩基)</p>' +
+    '<p class="f-ex">例(埼玉R7問18): 0.10mol/Lの硫酸10mLを、0.10mol/Lの水酸化ナトリウムで中和<br>2 × 0.10 × 10 = 1 × 0.10 × V<br>V = <b>20 mL</b>(硫酸は2価、NaOHは1価)</p></div></div>',
+    "語呂: 「モルはリットルで割る」「かける価数を忘れずに」。");
+
+  const MAP = { definition: ["cat"], labeling: ["labels"], transport: ["transport"], notification: ["timeline"], accident: ["timeline"], transfer: ["timeline"], disposal: ["disposal"], manager: [], prohibition: ["timeline"] };
+  const SUB = { na: ["flame"], k: ["flame"], agno3: ["precip"], nh3: ["precip"], koh: ["precip"], pbo: ["precip", "colors"], hgcl2: ["precip"], br2: ["precip", "colors"], phenol: ["precip", "colors"], aniline: ["precip", "colors"], hno3: ["precip"], nano2: ["precip"], cl2: ["colors"], i2: ["colors"], k2cr2o7: ["colors"], nh4cr2o7: ["colors"], cro3: ["colors"], picric: ["colors"], p4: ["colors", "storage"], zn3p2: ["colors"], nicotine: ["colors"], cs2: ["storage"], bnaphthol: ["storage"], h2o2: ["storage"], chcl3: ["storage"], acrolein: ["storage"], acrylonitrile: ["storage"], hf: ["storage"] };
+  const ALL = [["cat", "区分の関係"], ["labels", "表示の見分け方"], ["timeline", "期限の時間軸"], ["transport", "運搬の4点セット"], ["exclusion", "除外濃度の数直線"], ["disposal", "廃棄法の選び方"], ["storage", "貯蔵法のグループ"], ["colors", "物質の色"], ["flame", "炎色反応"], ["precip", "沈殿・呈色"], ["states", "状態変化"], ["calc", "計算の式"]];
+  return { render: (id) => (F[id] ? F[id]() : ""), forLaw: (id) => (MAP[id] || []), forSub: (id) => (SUB[id] || []), all: ALL };
+})();
+
 (function () {
   "use strict";
   const PROG_KEY = "dokugeki.progress.v1";
@@ -93,12 +209,12 @@
   /* ---------- data ---------- */
   async function getData() {
     if (window.DOKUGEKI_DATA) return window.DOKUGEKI_DATA;
-    const names = ["substances", "law", "questions", "tips", "meta", "amendments"];
+    const names = ["substances", "law", "questions", "tips", "meta", "amendments", "goro"];
     const got = await Promise.all(names.map((n) => fetch("data/" + n + ".json").then((r) => r.json()).catch(() => null)));
     const o = {}; names.forEach((n, i) => (o[n] = got[i])); return o;
   }
   function prepare(d) {
-    d.tips = d.tips || { intro: [], sheets: [] }; d.meta = d.meta || { method: [], facts: [] }; d.amendments = d.amendments || { items: [] };
+    d.tips = d.tips || { intro: [], sheets: [] }; d.meta = d.meta || { method: [], facts: [] }; d.amendments = d.amendments || { items: [] }; d.goro = d.goro || { groups: [] };
     const byName = new Map();
     d.substances.forEach((s) => {
       const base = s.name.replace(/[（(].*?[）)]/g, "");
@@ -150,6 +266,13 @@
     const C = window.DOKUGEKI_CONFIG || {};
     if (!C.adsenseClient) return;
     document.querySelectorAll("ins.adsbygoogle:not([data-done])").forEach((el) => { el.setAttribute("data-done", "1"); try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {} });
+  }
+
+  const FG = window.DOKUGEKI_FIGS || { render: () => "", forLaw: () => [], forSub: () => [], all: [] };
+  function goroFor(pred) { const out = []; (D.goro.groups || []).forEach((g) => (g.items || []).forEach((it) => { if (pred(it)) out.push(it); })); return out; }
+  function goroBox(items) {
+    if (!items.length) return "";
+    return '<div class="goro-box"><h3><span class="goro-tag">語呂</span>覚えるきっかけ</h3>' + items.map((it) => '<div class="goro-item"><p class="goro-line">' + esc(it.goro) + '</p><p class="goro-fact">' + rich(it.fact) + "</p></div>").join("") + "</div>";
   }
 
   /* ---------- 集計 ---------- */
@@ -302,6 +425,9 @@
     if (checks.length) h += '<div class="panel"><h3><span class="chk">要確認</span> 公的資料で確認できなかった項目</h3><ul class="points">' + checks.map((c) => "<li>" + esc(FIELD[c.field] || c.field) + ": " + esc(c.note) + "</li>").join("") + "</ul></div>";
     h += '<section class="panel"><h3 class="ghs">要点</h3><ul class="points">' + (s.summary || []).map((p, i) => "<li>" + coverable(rich(p), "sum" + i) + "</li>").join("") + "</ul></section>";
     if (s.mnemonic) h += '<section class="memo-box" aria-label="覚え方"><h3>覚え方</h3><p>' + coverable(rich(s.mnemonic), "mn") + "</p></section>";
+    h += goroBox(goroFor((it) => (it.sids || []).includes(s.id)));
+    const sf = FG.forSub(s.id);
+    if (sf.length) h += fold("図解で見る(" + sf.length + ")", sf.map((f) => FG.render(f)).join(""), false, "sd-fig");
     h += fold("性状・貯蔵・廃棄など(試験に出る事実)", '<dl class="facts">' +
       fact("区分", s.category + (s.category_note ? "。" + s.category_note : ""), "f-cat") + fact("法令の根拠", s.law_basis, "f-law") +
       fact("状態・性状", s.appearance, "f-app") + fact("性質", s.properties, "f-prop") + fact("毒性", s.toxicity, "f-tox") +
@@ -332,6 +458,8 @@
         '<blockquote class="law-text">' + esc(it.law_text) + "</blockquote>" +
         '<ul class="points">' + it.summary.map((p) => "<li>" + rich(p) + "</li>").join("") + "</ul>" +
         (it.mnemonic ? '<div class="memo-box"><h3>覚え方</h3><p>' + rich(it.mnemonic) + "</p></div>" : "") +
+        goroBox(goroFor((g) => g.law === it.id)) +
+        FG.forLaw(it.id).map((f) => FG.render(f)).join("") +
         (it.why ? "<p><b>なぜ:</b> " + rich(it.why) + "</p>" : "") +
         (it.scenarios || []).map((sc) => '<div class="scene"><p class="q">' + rich(sc.q) + '</p><p class="a">' + rich(sc.a) + "</p></div>").join("") +
         ((it.compare || []).length ? '<ul class="cmp">' + it.compare.map((c) => "<li><b>" + esc(c.with) + "</b><br>" + rich(c.diff) + "</li>").join("") + "</ul>" : "") +
@@ -451,7 +579,7 @@
   function renderPrep() {
     const M = D.meta, A = D.amendments, T = D.tips;
     let h = '<div class="view"><section class="panel"><h3 class="ghs">対策ノート</h3><p class="note">過去問13回分から読み取れる出題の癖、次の試験で出そうな法改正、覚え方の早見表をまとめています。</p>' +
-      '<div class="jump"><a href="#prep-meta" data-jump="prep-meta">出題の癖</a><a href="#prep-rank" data-jump="prep-rank">出題予想</a><a href="#prep-amend" data-jump="prep-amend">法改正PICK</a><a href="#prep-tips" data-jump="prep-tips">覚え方</a></div></section>';
+      '<div class="jump"><a href="#prep-meta" data-jump="prep-meta">出題の癖</a><a href="#prep-rank" data-jump="prep-rank">出題予想</a><a href="#prep-amend" data-jump="prep-amend">法改正PICK</a><a href="#prep-figs" data-jump="prep-figs">図解</a><a href="#prep-goro" data-jump="prep-goro">語呂合わせ</a><a href="#prep-tips" data-jump="prep-tips">早見表</a></div></section>';
     h += fold('<span class="lawhead"><span>出題の癖(メタ読み)</span><span class="law-art">' + (M.facts || []).length + "項目。数字はすべて過去問から集計</span></span>",
       (M.facts || []).map((f) => '<div class="meta-item"><p class="meta-title">' + esc(f.title) + '</p><p class="meta-fact"><span class="meta-k">事実</span>' + rich(f.fact) + '</p><p class="meta-how"><span class="meta-k k2">対策</span>' + rich(f.howto) + "</p></div>").join(""), false, "prep-meta");
     const top = [...D.substances].sort((a, b) => b.frequency.sets - a.frequency.sets || b.frequency.count - a.frequency.count).slice(0, 25);
@@ -461,18 +589,28 @@
       '<h3>法規(予想S)</h3><ul class="intro-list">' + D.law.items.filter((i) => (i.likelihood || {}).level === "S").map((i) => '<li><button type="button" class="linkish" data-goto="law:' + esc(i.id) + '">' + esc(i.title) + "</button>(" + esc(i.articles[0]) + ")</li>").join("") + "</ul>", false, "prep-rank");
     h += fold('<span class="lawhead"><span>次の試験で出そうな法改正 <span class="amend">PICK</span></span><span class="law-art">' + (A.items || []).length + "件。○×の確認問題つき</span></span>",
       '<p class="note">' + esc(A.as_of || "") + '</p><p class="note">' + esc(A.how || "") + "</p>" + (A.items || []).map(amendCard).join(""), false, "prep-amend");
+    h += '<section class="panel" id="prep-figs"><h3 class="ghs">図解で覚える</h3><p class="note">表やイラストで、まとめて見比べられます。押すと開きます。</p></section>' +
+      FG.all.map(([id, t]) => fold('<span class="lawhead"><span>' + esc(t) + "</span></span>", FG.render(id), false, "fig-" + id)).join("");
+    const G = D.goro;
+    h += '<section class="panel" id="prep-goro"><h3 class="ghs">語呂合わせ集</h3><p class="note">' + esc(G.intro || "") + "</p></section>" +
+      (G.groups || []).map((g) => fold('<span class="lawhead"><span><span class="goro-tag">語呂</span>' + esc(g.title) + '</span><span class="law-art">' + g.items.length + "個</span></span>",
+        '<div class="goro-list">' + g.items.map((it, i) => {
+          const key = "g-" + g.id + "-" + i, hideG = !!state.prefs.tipsHide;
+          const links = (it.sids || []).map((id) => D.byId.get(id)).filter(Boolean).map((x) => '<button type="button" class="linkish" data-open="' + esc(x.id) + '">' + esc(x.name) + "</button>").join(" ") +
+            (it.law ? ' <button type="button" class="linkish" data-goto="law:' + esc(it.law) + '">法規まとめ</button>' : "");
+          return '<div class="goro-item"><p class="goro-line">' + esc(it.goro) + "</p>" + (hideG ? '<button class="cover" type="button" data-reveal="' + key + '">覚える事実を見る</button><p hidden data-revealed="' + key + '" class="goro-fact">' + rich(it.fact) + "</p>" : '<p class="goro-fact">' + rich(it.fact) + "</p>") + (links ? '<p class="sheet-links">' + links + "</p>" : "") + "</div>";
+        }).join("") + "</div>", false, "goro-" + g.id)).join("");
     const hide = !!state.prefs.tipsHide;
     h += '<section class="panel" id="prep-tips"><h3 class="ghs">覚え方の早見表</h3><ul class="intro-list">' + (T.intro || []).map((x) => "<li>" + rich(x) + "</li>").join("") + "</ul>" +
-      '<label class="toggle"><input id="tipshide" type="checkbox"' + (hide ? " checked" : "") + "> 答えを隠す(一問一答にする)</label></section>";
+      '<label class="toggle"><input id="tipshide" type="checkbox"' + (hide ? " checked" : "") + "> 答えを隠す(早見表と語呂合わせを一問一答にする)</label></section>";
     h += (T.sheets || []).map((sh) => {
       const rows = (sh.rows || []).map((r, i) => {
-        const key = "t-" + sh.id + "-" + i, ans = '<span class="arrow">→</span>' + rich(r.answer);
+        const key = "t-" + sh.id + "-" + i, ans = rich(r.answer);
         const links = (r.sids || []).map((id) => D.byId.get(id)).filter(Boolean).map((x) => '<button type="button" class="linkish" data-open="' + esc(x.id) + '">' + esc(x.name) + "</button>").join(" ");
-        return '<li><span class="sheet-cue">' + rich(r.cue) + '</span><span class="sheet-ans">' + (hide ? '<button class="cover" type="button" data-reveal="' + key + '">答えを見る</button><span hidden data-revealed="' + key + '">' + ans + "</span>" : ans) + "</span>" +
-          (r.note ? '<span class="sheet-note">' + rich(r.note) + "</span>" : "") + (links ? '<span class="sheet-links">' + links + "</span>" : "") + "</li>";
+        return "<tr><td>" + rich(r.cue) + (r.note ? '<small class="sheet-note">' + rich(r.note) + "</small>" : "") + "</td><td>" + (hide ? '<button class="cover" type="button" data-reveal="' + key + '">答え</button><span hidden data-revealed="' + key + '"><b>' + ans + "</b></span>" : "<b>" + ans + "</b>") + (links ? '<span class="sheet-links">' + links + "</span>" : "") + "</td></tr>";
       }).join("");
       return fold('<span class="lawhead"><span>' + esc(sh.title) + '</span><span class="law-art">' + (sh.rows || []).length + "項目</span></span>",
-        (sh.why ? '<p class="sheet-why">' + rich(sh.why) + "</p>" : "") + '<ul class="sheet-rows">' + rows + "</ul>" + (sh.tip ? '<p class="sheet-tip">' + rich(sh.tip) + "</p>" : ""), false, "tip-" + sh.id);
+        (sh.why ? '<p class="sheet-why">' + rich(sh.why) + "</p>" : "") + '<div class="tbl-wrap"><table class="tbl tbl-sheet"><thead><tr><th>手がかり</th><th>答え</th></tr></thead><tbody>' + rows + "</tbody></table></div>" + (sh.tip ? '<p class="sheet-tip">' + rich(sh.tip) + "</p>" : ""), false, "tip-" + sh.id);
     }).join("");
     return h + "</div>";
   }
