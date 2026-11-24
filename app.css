@@ -447,3 +447,8 @@ details.fold > .fold-body { padding: 0 16px 14px; display: grid; gap: 10px; }
 .xbar { height: 12px; background: var(--glass-soft); border-radius: 6px; overflow: hidden; }
 .xbar span { display: block; height: 100%; background: var(--doku); }
 .xnames { grid-column: 2; font-size: .9rem; }
+.fig-btns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.fig-btn { border: 1px solid var(--glass); background: var(--surface); color: var(--glass); border-radius: 8px; padding: 10px 8px; min-height: 46px; font-weight: 700; cursor: pointer; text-align: left; }
+.fig-btn::before { content: "図 "; color: var(--doku-text); }
+@media (min-width: 560px) { .fig-btns { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+details.fold, .panel { scroll-margin-top: calc(70px + env(safe-area-inset-top, 0px)); }

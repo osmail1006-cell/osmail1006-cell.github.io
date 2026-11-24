@@ -589,7 +589,8 @@ window.DOKUGEKI_FIGS = (function () {
       '<h3>法規(予想S)</h3><ul class="intro-list">' + D.law.items.filter((i) => (i.likelihood || {}).level === "S").map((i) => '<li><button type="button" class="linkish" data-goto="law:' + esc(i.id) + '">' + esc(i.title) + "</button>(" + esc(i.articles[0]) + ")</li>").join("") + "</ul>", false, "prep-rank");
     h += fold('<span class="lawhead"><span>次の試験で出そうな法改正 <span class="amend">PICK</span></span><span class="law-art">' + (A.items || []).length + "件。○×の確認問題つき</span></span>",
       '<p class="note">' + esc(A.as_of || "") + '</p><p class="note">' + esc(A.how || "") + "</p>" + (A.items || []).map(amendCard).join(""), false, "prep-amend");
-    h += '<section class="panel" id="prep-figs"><h3 class="ghs">図解で覚える</h3><p class="note">表やイラストで、まとめて見比べられます。押すと開きます。</p></section>' +
+    h += '<section class="panel" id="prep-figs"><h3 class="ghs">図解で覚える</h3><p class="note">見たい図解のボタンを押すと、その図が開きます。下の一覧の見出しを押しても開けます。</p><div class="fig-btns">' +
+      FG.all.map(([id, t]) => '<button type="button" class="fig-btn" data-fig="' + esc(id) + '">' + esc(t) + "</button>").join("") + "</div></section>" +
       FG.all.map(([id, t]) => fold('<span class="lawhead"><span>' + esc(t) + "</span></span>", FG.render(id), false, "fig-" + id)).join("");
     const G = D.goro;
     h += '<section class="panel" id="prep-goro"><h3 class="ghs">語呂合わせ集</h3><p class="note">' + esc(G.intro || "") + "</p></section>" +
@@ -658,6 +659,7 @@ window.DOKUGEKI_FIGS = (function () {
     const t = e.target.closest("button, a"); if (!t) return;
     if (t.dataset.tab) return setTab(t.dataset.tab);
     if (t.dataset.open) return openSub(t.dataset.open);
+    if (t.dataset.fig) { const d = document.getElementById("fig-" + t.dataset.fig); if (d) { d.open = true; d.scrollIntoView({ block: "start" }); } return; }
     if (t.dataset.jump) { e.preventDefault(); const d = document.getElementById(t.dataset.jump); if (d) { if (d.tagName === "DETAILS") d.open = true; d.scrollIntoView({ block: "start" }); } return; }
     if (t.dataset.reveal) { const k = t.dataset.reveal, sp = t.parentNode.querySelector('[data-revealed="' + k + '"]'); if (sp) { sp.hidden = false; t.remove(); } return; }
     if (t.dataset.st) { const [kind, id, st] = t.dataset.st.split(":"); setSt(kind, id, Number(st)); return render(false); }
@@ -729,6 +731,9 @@ window.DOKUGEKI_FIGS = (function () {
     document.head.appendChild(s);
   }
   if ("serviceWorker" in navigator && location.protocol.startsWith("http") && !/claude\.ai$|claudeusercontent\.com$/.test(location.hostname)) {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
+    const hadController = !!navigator.serviceWorker.controller;
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadController && !reloaded) { reloaded = true; location.reload(); } });
+    navigator.serviceWorker.register("sw.js").then((reg) => reg.update()).catch(() => {});
   }
 })();
